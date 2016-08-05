@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8"/>
+<meta name="renderer" content="webkit|ie-stand"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+<meta name="viewport" content="initial-scale=1.0, width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+<meta name="format-detection" content="telephone=no, email=no"/>
+<meta name="msapplication-tap-highlight" content="no"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black"/>
+<meta name="x5-page-mode" content="app"/>
+<meta name="browsermode" content="application"/>
+<style>
+ul,ol{margin:0;padding:0;list-style:none}
+
+
+/** n2menu **/
+.n2menu{width:73px;line-height:32px;padding-top:78px;
+background: url(n2menu.png) no-repeat center 0 /100% auto;
+color:#fff;font-size:14px;text-align:center;letter-spacing:2px;
+cursor:pointer;-moz-user-select:none;-webkit-user-select:none;-ms-user-select:none;user-select:none;}
+.n2menu a,.n2menu b{display:block;color:#fff;}
+.n2mn{margin-bottom:8px;}
+.n2ti{background:#999;border-radius:6px;}
+.n2ti:active,.n2mn.now .n2ti{background:#f60;}
+.n2sub{margin:-2px 6px 0; background-color:#ae6509;border-bottom-right-radius:6px;border-bottom-left-radius:6px;}
+.n2it{}
+.n2it:active{background-color:#9f5c07;}
+.n2it.now{background-color:#cb8e12;}
+.n2sub{height:0px;overflow:hidden; transition:height 1s ease-in 1s;}
+.n2mn.now .n2sub{height:auto;}
+
+.n2menu.off{height:0;overflow:hidden;}
+.n2fix{position:fixed;left:-6px;bottom:60px;z-index:30;}
+
+</style>
+<title>跨页菜单</title>
+<meta name="keywords" content="tag"/>
+<meta name="description" content="desc"/>
+</head>
+<body id="n2MenuDemo">
+
+
+<ul class="n2menu jsmenu n2fix">
+
+<li class="n2mn">
+<a class="n2ti">作品</a>
+<p class="n2sub">
+<a class="n2it">炫音</a>
+<a class="n2it">秒拍</a>
+<a class="n2it">颜值</a>
+<a class="n2it" href="tieba.html">贴吧</a>
+</p>
+</li>
+<li class="n2mn"><a class="n2ti">公益</a></li>
+<li class="n2mn"><a class="n2ti">评委</a></li>
+<li class="n2mn"><a class="n2ti" href="jiabin.html">嘉宾</a></li>
+</ul>
+
+
+
+<script src="jq.js"></script>
+<script>
+
+/*跨页菜单实例运用*/
+if($('.n2menu').length){flMenuN2();}
+
+
+
+/*** 同步跨页菜单 ***/
+/*****
+a_j0lsmenu.js
+Version: j020160806gz
+Author: Jiu0
+Uri: http://github.com/jiu0
+*****/
+
+function flMenuN2(){
+  
+
+/** 优先读取 本地存储 **/
+var strmninfo = window.localStorage? localStorage.getItem('strmninfo'): Cookie.read('strmninfo');
+var mninfo=[];
+if(strmninfo){
+	mninfo=strmninfo.split(',');
+}else{
+	mninfo=['','',''];
+}console.log(mninfo);
+
+
+/** 显示 初始菜单 **/
+var n2menu=$('.n2menu'),n2mns=$('.n2mn'),n2its=$('.n2it');
+/*复位 */
+n2menu.removeClass('off');n2mns.removeClass('now');n2its.removeClass('now');
+/*呈现 */
+if(mninfo[0]==''){}else{n2menu.eq(mninfo[0]).addClass('off');}
+if(mninfo[1]==''){}else{n2mns.eq(mninfo[1]).addClass('now');}
+if(mninfo[2]==''){}else{n2its.eq(mninfo[2]).addClass('now');}
+
+
+/** 菜单激发 同步改变菜单和本地存储**/
+mninfo=flMenuClick(n2menu,0,'off',mninfo);
+mninfo=flMenuClick(n2mns,1,'now',mninfo);
+mninfo=flMenuClick(n2its,2,'now',mninfo);
+
+}/*0.5*/
+
+
+ 
+/* 点击 某层级j 对象组as 中成员o, 即时存储 被点击成员索引值v, 并更新菜单状态info */
+function flMenuClick(as,j,cl,info){
+as.click(function(ev){
+	ev.stopPropagation();
+	var o=$(this),v;	
+	if(o.hasClass(cl)){
+		o.removeClass(cl),v='';
+	}else{
+		o.addClass(cl),v=as.index(o);
+	}
+	as.not(o).removeClass(cl);	
+	info=flMenuStore(info,j,v);
+});
+return info;
+}/*0.5*/
+
+/* 存储菜单j层状态info. IE6~7用cookie,其他浏览器用localStorage */
+function flMenuStore(info,j,v){
+info[j]=v;
+if(window.localStorage){
+	localStorage.setItem('strmninfo',info);	
+}else{
+	Cookie.write('strmninfo', info);	
+}
+//console.log(info);
+return info;
+}/*0.5*/
+
+
+
+
+/*****j020160805gz*****/
+
+
+
+
+</script>
+
+</body>
+</html>
